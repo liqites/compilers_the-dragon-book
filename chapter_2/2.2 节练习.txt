@@ -30,7 +30,8 @@ TODO: 如何证明？2.2.1
 2）由 {+,-,a} 组成的字符串，以 {+,-} 开头，以 a 结尾。a 至少出现 2 次。
 3）由 {(,)} 组成的字符串，其中 {(,)} 成对出现
 4) 由 {a, b} 组成的字符串，a 与 b 出现的次数相同。
-5）一个简单的正则表达式文法，来自网络的答案？？#TODO: 无法理解，我觉得问题写得不清楚。
+5）一个简单的正则表达式文法，来自网络的答案？？
+#TODO: 无法理解，我觉得问题写得不清楚。
 #TODO: 如何证明？ 2.2.2
 
 2.2.3 练习 2.2.2 中哪些文法具有二义性？
@@ -109,5 +110,9 @@ smallDigit -> I | II | III | e
 
 romanNum -> thousand hundred ten digit
 thousand -> M | MM | MMM | e
-hundred -> smallHUndred | C D | D smallHUndred | C M
-smallHUndred -> C | CC | CCC | e
+hundred -> smallHundred | C D | D smallHundred | C M
+smallHundred -> C | CC | CCC | e
+ten -> smallTen | X L | L SmallTen | X C
+smallTen -> X | XX | XXX | e
+digit -> smallDigit | IV | V smallDigit | IX
+smallDigit -> I | II | III | e

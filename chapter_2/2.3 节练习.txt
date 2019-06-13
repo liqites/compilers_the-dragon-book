@@ -1,0 +1,89 @@
+文法：
+expr -> expr + term | expr - term | term
+term -> term * factor | term / factor | factor
+factor -> digit | (expr)
+
+2.3.1: 构建一个语法制导翻译方案，该方案把算数表达式从中缀表示方式翻译成运算符在运算分量之前的前缀表示方式。
+例如，-xy 是表达式 x - y 的前缀表示法。给出输入 9-5+2 和 9-5*2 的注释分析树。
+
+答：
+expr.t = {print("+")} || expr_1.t || term.t
+expr.t = {print("-")} || expr_1.t || term.t
+expr.t = term.t
+term.t = {print("*")} || term_1.t || factor.t
+term.t = {print("/")} || term_1.t || factor.t
+factor.t = '0'
+factor.t = '1'
+factor.t = '2'
+factor.t = '3'
+factor.t = '4'
+factor.t = '5'
+factor.t = '6'
+factor.t = '7'
+factor.t = '8'
+factor.t = '9'
+factor.t = '(' || expr.t || ')'
+
+9-5+2 = +-952
+9-5*2 = -9*52
+
+expr.t = +-952
+expr.t = + || expr_1.t || term_1.t
+expr_1.t = - || expr_2.t || term_2.t
+expr_2.t = term_3.t
+term_3.t = factor_1.t
+factor_1.t = 9
+
+term_2.t = factor_2.t
+factor_2.t = 5
+term_1.t = factor_3.t
+factor_3.t = 2
+
+expr.t = -9*52
+expr.t = - || expr_1.t || term_1.t
+expr_1.t = term_2.t
+term_2.t = factor_1.t
+factor_1.t = 9
+
+term_1.t = * || term_2.t || factor_2.t
+term_2.t = factor_3.t
+factor_3.t = 5
+factor_2.t = 2
+
+2.3.2: 构建一个语法制导翻译方案，该方案将算数表达式从后缀表示方式翻译成中缀表示方式。给出输入 92-2*和952*-的注视分析书。
+
+后缀表示的文法：
+expr -> expr term + | expr term - | term
+term -> term factor * | term factor / | factor
+factor -> digit | (expr)
+
+语法制导翻译方案：
+expr.t = expr_1.t || {print("+")} || term.t
+expr.t = expr_1.t || {print("-")} || term.t
+expr.t = term.t
+term.t = term_1.t || {print("*")} || factor.t
+term.t = term_1.t || {print("/")} || factor.t
+factor.t = '0'
+factor.t = '1'
+factor.t = '2'
+factor.t = '3'
+factor.t = '4'
+factor.t = '5'
+factor.t = '6'
+factor.t = '7'
+factor.t = '8'
+factor.t = '9'
+factor.t = '(' || expr.t || ')'
+
+92-2* = （9-2）*2
+952*- = 9-5*2
+
+2.3.3: 构建一个将整数翻译成罗马数字的语法制导翻译方案。
+答：
+
+
+2.3.4: 构建一个将罗马数字翻译成整数的语法制导翻译方案。
+答：
+
+2.3.5: 构建一个将后缀算数表达式翻译成等价的前缀算数表达式的语法制导翻译方案。
+答：
