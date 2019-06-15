@@ -100,6 +100,7 @@ num -> num num
 #NOTE: 后面需要用到罗马数字的文法，必须要写了！！！
 
 答：
+【网络的答案】
 罗马数字的构成
 I V X L C D M
 不考虑加横线乘以 1000 的算法
@@ -116,3 +117,22 @@ ten -> smallTen | X L | L SmallTen | X C
 smallTen -> X | XX | XXX | e
 digit -> smallDigit | IV | V smallDigit | IX
 smallDigit -> I | II | III | e
+
+有一个问题。我可以测试出这个文法可以生成罗马数字
+但是我如何确定这种文法生成的所有的字符串，都是合法的罗马数字？
+二是，上下文无关的文法是不是其实并不需要有规则，比如，罗马数字的
+左减右加等。文法只规定结构，并不决定意义。
+
+【我的答案】
+因为条件的限制，目前使用的所有符号的
+I(1), V(5), X(10), L(50), C(100), D(500), M(1000)
+根据罗马数字的规则，可以发现一些规律。
+
+romanNumder -> basicThousand hundred ten digit
+basicThousand -> M | MM | MMM | e
+hundred -> basicHundred | CD | D | D basicHundred | CM |e
+basicHundred -> C | CC | CCC
+ten -> basicTen | XL | L | L basicTen | XC | e
+basicTen -> X | XX | XXX
+digit -> basicDigit | IV | V | V basicDigit | IX | e
+basicDigit -> I | II | III 

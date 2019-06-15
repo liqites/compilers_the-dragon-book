@@ -78,12 +78,71 @@ factor.t = '(' || expr.t || ')'
 92-2* = （9-2）*2
 952*- = 9-5*2
 
+
+I(1), V(5), X(10), L(50), C(100), D(500), M(1000)
+
 2.3.3: 构建一个将整数翻译成罗马数字的语法制导翻译方案。
 答：
+num -> thousand hundred ten digit
+thousand -> [1..9]
+hundred -> [0..9]
+ten -> [0..9]
+digit -> [0..9]
+
+define a function
+repeat(symbol, times)
+for example: repeat('X', 3) return 'XXX'
+
+num -> thousand hundred ten digit
+{num.roman = thousand.roman || hundred.roman || ten.roman || digit.roman}
+
+thousand -> low {repeat('M', low.v)}
+
+hundred -> low {repeat('C', low.v)} |
+           4 {print('CD')} |
+           5 {print('D')} |
+           high {print('D') repeat('C', high.v - 5)} |
+           9 {print('CM')}
+
+ten -> low {repeat('X', low.v)} |
+       4 {print('XL')} |
+       5 {print('L')} |
+       high {print('L') repeat('X', high.v - 5)} | 
+       9 {print('XC')}
+
+digit -> low {repeat('I', low.v)} |
+       4 {print('IV')} |
+       5 {print('V')} |
+       high {print('V') repeat('I', high.v - 5)} | 
+       9 {print('IX')}
+
+low -> 0 | 1 | 2 | 3
+high -> 6 | 7 | 8
 
 
 2.3.4: 构建一个将罗马数字翻译成整数的语法制导翻译方案。
 答：
+语法
+romanNumder -> basicThousand hundred ten digit
+basicThousand -> M | MM | MMM | e
+hundred -> basicHundred | CD | D | D basicHundred | CM |e
+basicHundred -> C | CC | CCC
+ten -> basicTen | XL | L | L basicTen | XC | e
+basicTen -> X | XX | XXX
+digit -> basicDigit | IV | V | V basicDigit | IX | e
+basicDigit -> I | II | III 
+
+romanNumder -> basicThousand hundred ten digit {romanNumder.v = basicThousand.v || hundred.v || ten.v || digit.v ; print(romanNumder.v)}
+basicThousand -> M {basicThousand.v = 1}| MM {basicThousand.v = 2} | MMM {basicThousand.v = 3}| e
+hundred -> basicHundred { hundred.v = basicHundred.v } | CD {hundred.v = 4} | D {hundred.v = 5} | D basicHundred {hundred.v = 5 + basicHundred.v}| CM {hundred.v = 9}
+basicHundred -> C {basicHundred.v = 1} | CC {basicHundred.v = 2} | CCC {basicHundred.v = 3} | e
+ten -> basicTen {ten.v = basicTen.v} | XL {ten.v = 4}| L {ten.v = 5}| L basicTen {ten.v = 5 + basicTen.v}| XC {ten.v = 9}
+basicTen -> X {basicTen.v = 1} | XX {basicTen.v = 2} | XXX {basicTen.v = 3} | e
+digit -> basicDigit {digit.v = basicDigit.v} | IV {digit.v = 4} | V {digit.v = 5}| V basicDigit {digit.v = 5 + basicDigit.v}| IX {digit.v = 9}
+basicDigit -> I {basicDigit.v = 1} | II {basicDigit.v = 2} | III {basicDigit.v = 3}} | e {basicDigit.v = 0}
+
 
 2.3.5: 构建一个将后缀算数表达式翻译成等价的前缀算数表达式的语法制导翻译方案。
-答：
+答：expr -> expr expr opt | digit
+
+expr -> {print(opt) expr expr opt} | digit {print(digit)}
