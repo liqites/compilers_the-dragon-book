@@ -1,0 +1,62 @@
+2.4.1: 为下列文法构造递归下降语法分析器：
+1) S -> + S S | - S S | a
+2) S -> S ( S ) S | e
+3) S -> 0 S 1 | 0 1
+
+答：
+1): 
+void s() {
+    switch(lookahead) {
+        case '+' :
+            match('+'); s(); s();
+            break;
+        case '-' :
+            match('-'); s(); s();
+            break;
+        case 'a' :
+            match('a);
+            break;
+        default:
+            print('syntax error');
+            
+    }
+}
+
+match(terminal t) {
+    if(lookahead == t) {
+        lookahead = nextTerminal;
+    } else {
+        print('syntax error');
+    }
+}
+
+2):
+void s() {
+    switch(lookahead) {
+        case s:
+            s(); match('('); s(); match(')'); s();
+            break;
+        default:
+            print('syntax error');
+    }
+}
+
+match(terminal t) {
+    if(lookahead == t) {
+        lookahead = nextTerminal;
+    } else {
+        print('syntax error');
+    }
+}
+
+3):
+void s() {
+    switch(lookahead) {
+        case '0':
+            match('0'); s(); match('1');
+        case '1'
+            break;
+        default:
+            print('syntax error');
+    }
+}
