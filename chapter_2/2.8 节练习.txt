@@ -1,0 +1,52 @@
+2.8.1: C 语言和 Java 语言中的 for 语句具有如下形式:
+for(expr1; expr2; expr3) stmt
+第一个表达式在循环之前执行，它通常被用来初始化循环下表。
+第二个表达式是一个测试，它在循环的每次迭代之前进行。
+如果这个表达式的结果变成 0，就退出循环。循环本身可以被看作 {stmt; expr3;}。第三个表达式在每一次迭代的末尾执行，它通常用来使循环下表递增。
+故 for 语句的含义类似于
+expr1; while(expr2) {stmt; expr3;}
+仿照图 2-43 中的类 If，为 for 语句定义一个类 For。
+
+在这里先给出类 If 的伪代码。
+class If extends Stmt {
+   Expr E; Stmt S;
+   public If(Expr x, Stmt y) {
+      E = x;
+      S = y;
+      after = newlabel(); // If 语句外的标记位置
+   }
+
+   public void gen() {
+      Expr n = E.rvalue();
+      emit("ifFalse" + n.toString() + "goto" + after);
+      S.gen();
+      emit(after + ":");
+   }
+}
+
+答：
+class For extends Stmt {
+   Expr E1; Expr E2; Expr E2; Stmt S;
+   public For(Expr x1, Expr x2, Expr x3, Stmt y) {
+      E1 = x1;
+      E2 = x2;
+      E3 = x3;
+      S = y;
+   }
+
+   public void gen() {
+      Expr n1 = E1.rvalue();
+      start = newlabel();// 循环开始的标记位置
+      end = newlabel(); // 循环结束的标记位置
+      Expr n2 = E2.rvalue();
+      emit("ifFalse" + n2.toString() + "goto" + end);
+      S.gen();
+      E3.gen();
+      emit("goto" + start);
+      emit(end + ":");
+   }
+}
+
+2.8.2: 程序设计语言 C 中没有布尔类型。试说明 C 语言的编译器可能使用什么方法将一个 if 语句翻译成为三地址代码。
+答：
+将 E.rvalue() 结果节点的值的类型转化为整型。同时针对结果节点的值，判断是否为 0；
