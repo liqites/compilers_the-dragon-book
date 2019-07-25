@@ -27,12 +27,17 @@ TODO: 如何证明？2.2.1
 
 答:
 1）01,0011,000111 ... 由0和1组成的字符串，0 与 1 的出现次数相同，且所有的 0 都在 1 前面，0 与 1 至少出现1次
-2）由 {+,-,a} 组成的字符串，以 {+,-} 开头，以 a 结尾。a 至少出现 2 次。
+2）由 {+,-,a} 组成的字符串，以 {+,-} 开头，以 a 结尾。a 至少出现 1 次。
+（a只出现一次的例子： a）
 3）由 {(,)} 组成的字符串，其中 {(,)} 成对出现
+一个合法，或者说括号能够互相匹配的括号序列
 4) 由 {a, b} 组成的字符串，a 与 b 出现的次数相同。
-5）一个简单的正则表达式文法，来自网络的答案？？
-#TODO: 无法理解，我觉得问题写得不清楚。
-#TODO: 如何证明？ 2.2.2
+5）一个简单的正则表达式文法
+正则表达式链接[https://baike.baidu.com/item/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F]
+详细解释：
+这个文法能够生成一部分正则表达式，这些正则表达式能够作用与只有字母a和小括号的序列
+在正则表达式中，+表示匹配1次或多次，*表示匹配0次或多次
+比如说a+a是一个合法的序列，它是一个正则表达式，它能够匹配仅包含字母a且长度不小于2的字符串
 
 2.2.3 练习 2.2.2 中哪些文法具有二义性？
 1）没有二义性
@@ -46,9 +51,12 @@ TODO: 如何证明？2.2.1
 2.2.4 为下面的语言构建无二义性的上下文无关的文法。证明你的文法都是正确的。
 1）用后缀方式表示的算术表达式
 答：
-expr -> expr term + | expr term -
-term -> term factor * | term factor /
+expr -> term expr + | term expr - | term
+term -> term factor * | term factor / | factor
 factor -> digit | (expr)
+
+（注1：原本版本没有expr -> term一项，无法产生3*4，甚至，原本的语法无法产生一个有限长度的序列，因为expr的所有生成式都包含至少一个expr）
+（注2：原本版本写的是expr term +, 而以123++为例，原本版本会将其切分为1(23+)+，并认为(23+)是term。实际上，23+应该是expr。而如果写成expr -> expr expr +会招致二义性）
 
 简单版本
 expr -> num num op | num
@@ -63,8 +71,8 @@ list -> id, list | id
 
 4）由整数、标识符、四个二目运算符 +、-、*、/构成的算术表达式
 答：
-expr -> expr + term | expr - trem
-term -> term * factor | term / factor
+expr -> expr + term | expr - trem | expr
+term -> term * factor | term / factor | factor
 factor -> id | digit | (expr)
 
 2.2.5 
@@ -94,6 +102,19 @@ num -> num num
 
 2）
 不能，以上文法不能产生 12
+（此处有误，但答案确实是不能，应该是不能产生21）
+12的二进制1100
+     num
+   /    \
+ num     0
+ /  \    |
+num  0   |
+ |   |   |
+ 11  0   0
+ 
+ 不能产生21的证明：
+ 21的二进制10101。
+ num的所有生成式都引入偶数个1，而21有奇数个1，必定不能被产生
 
 2.2.6 为罗马数字构建一个上下文无关的文法
 #TODO: 暂时不做了 2.2.6，下次查一下罗马数字的组成再写。
@@ -128,7 +149,8 @@ smallDigit -> I | II | III | e
 I(1), V(5), X(10), L(50), C(100), D(500), M(1000)
 根据罗马数字的规则，可以发现一些规律。
 
-romanNumder -> basicThousand hundred ten digit
+romanNumber -> BasicromanNumber | 上划线(romanNumber) | 上划线(romanNumber) BasicromanNumber
+BasicromanNumder -> basicThousand hundred ten digit
 basicThousand -> M | MM | MMM | e
 hundred -> basicHundred | CD | D | D basicHundred | CM |e
 basicHundred -> C | CC | CCC
@@ -136,3 +158,5 @@ ten -> basicTen | XL | L | L basicTen | XC | e
 basicTen -> X | XX | XXX
 digit -> basicDigit | IV | V | V basicDigit | IX | e
 basicDigit -> I | II | III 
+
+（注：增加了上划线的考虑）
